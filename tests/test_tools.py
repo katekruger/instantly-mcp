@@ -190,7 +190,10 @@ def test_resolve_interest_status():
 
 
 def test_campaign_build_preview_is_paused_and_zero_write():
-    result = campaign_build_preview("Design partners", "Hi", "Body", sender_accounts=["a@example.com"], tags=["beta"], lead_list_id="list-1")
+    result = campaign_build_preview(
+        "Design partners", "Hi", "Body",
+        sender_accounts=["a@example.com"], tags=["beta"], lead_list_id="list-1",
+    )
     assert result["creation_status"] == "paused"
     assert result["write_performed"] is False
     assert result["summary"]["variant_count"] == 1

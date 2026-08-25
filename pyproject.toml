@@ -1,7 +1,18 @@
 [project]
 name = "instantly-mcp"
 version = "0.1.0"
-description = "Local MCP server wrapping the Instantly.ai v2 API (analytics, leads, campaigns, unibox, accounts) with per-action safety gates and an autonomy policy."
+description = "MCP server wrapping the Instantly.ai v2 API (analytics, leads, campaigns, unibox, accounts) with per-action safety gates and an autonomy policy."
+keywords = ["mcp", "model-context-protocol", "instantly", "cold-email", "claude", "llm-tools"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Communications :: Email",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -15,7 +26,14 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
+    "ruff>=0.6.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/katekruger/instantlymcp"
+Repository = "https://github.com/katekruger/instantlymcp"
+Documentation = "https://github.com/katekruger/instantlymcp#documentation"
+Issues = "https://github.com/katekruger/instantlymcp/issues"
 
 [project.scripts]
 instantly-mcp = "instantly_mcp.server:main"
@@ -30,3 +48,13 @@ packages = ["src/instantly_mcp"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# Correctness and import hygiene. Stylistic modernization rules (UP) are left
+# off deliberately: `Optional[X]` reads fine and churning 900 lines of working
+# tool definitions to satisfy a preference is not worth the diff.
+select = ["E", "F", "W", "I", "B"]

@@ -27,7 +27,7 @@ from .models import (
     resolve_interest_status,
     simple_sequence,
 )
-from .policy import HIGH_WRITE, LOW_WRITE, READ, Policy
+from .policy import HIGH_WRITE, LOW_WRITE, Policy
 
 # Built from $TRANSPORT: bare over stdio, bearer-token resource server over
 # HTTP. Refuses to start an HTTP transport with no token -- see auth.py.
@@ -454,7 +454,9 @@ async def preview_campaign_build(
     tags: Optional[list[str]] = None,
     lead_list_id: Optional[str] = None,
 ) -> Any:
-    """Preview campaign, variants, schedule, senders, tags, and lead-list mapping with ZERO HTTP calls."""
+    """Preview campaign, variants, schedule, senders, tags, and lead-list mapping.
+
+    Makes ZERO HTTP calls."""
     return campaign_build_preview(
         name, subject, body, timezone=timezone, schedule=schedule,
         sequences=sequences, sender_accounts=sender_accounts, tags=tags,

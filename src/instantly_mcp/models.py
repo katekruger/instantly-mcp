@@ -136,7 +136,11 @@ def campaign_build_preview(
         "warnings": warnings,
         "creation_status": "paused",
         "write_performed": False,
-        "execution_note": "create_campaign writes only verified campaign fields. Sender, tag, and lead-list mappings remain explicit follow-ups until their endpoint contracts are configured.",
+        "execution_note": (
+            "create_campaign writes only verified campaign fields. Sender, tag, and "
+            "lead-list mappings remain explicit follow-ups until their endpoint "
+            "contracts are configured."
+        ),
     }
 
 
