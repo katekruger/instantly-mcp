@@ -1,0 +1,17 @@
+# Secrets & audit trail (audit.log may contain lead emails)
+.env
+audit.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+deploy-token.txt

@@ -1,0 +1,44 @@
+# Render blueprint for the hosted Instantly MCP server.
+#
+# Deploy: Render Dashboard -> New -> Blueprint -> point at this repo.
+# Render reads this file, builds the Dockerfile, and prompts for the secrets
+# marked `sync: false` (they are never stored in the repo).
+services:
+  - type: web
+    name: instantly-mcp
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+
+    # Free tier spins down when idle; the first request after a lull takes ~30s
+    # to wake, which an MCP client may read as a timeout. Move to `starter` if
+    # you hit that. Disk is ephemeral on every tier here, so audit.log does not
+    # survive restarts -- see README if you need a durable audit trail.
+    plan: free
+
+    # Must NOT be /mcp: that correctly answers 401 without a bearer token, which
+    # Render would read as a permanently failing service. /healthz is an
+    # unauthenticated 200 that leaks nothing.
+    healthCheckPath: /healthz
+
+    envVars:
+      - key: TRANSPORT
+        value: streamable-http
+
+      # Keep writes gated behind an explicit confirm even though auth is on.
+      - key: AUTONOMY_LEVEL
+        value: manual
+
+      # --- secrets: Render prompts for these, nothing is committed -----------
+      # Your Instantly v2 API key.
+      - key: INSTANTLY_API_KEY
+        sync: false
+
+      # The bearer token Claude must present. Min 32 chars; the server refuses
+      # to start without it. Generate with:
+      #   python -c "import secrets; print(secrets.token_urlsafe(32))"
+      - key: MCP_AUTH_TOKEN
+        sync: false
+
+    # PORT and RENDER_EXTERNAL_URL are injected by Render automatically.
+    # auth.py falls back to RENDER_EXTERNAL_URL, so PUBLIC_URL only needs
+    # setting if you put a custom domain in front of this service.
