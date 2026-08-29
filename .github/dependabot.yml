@@ -1,0 +1,32 @@
+version: 2
+
+updates:
+  # No lockfile is committed (README supports both uv and venv+pip), so
+  # Dependabot reads dependency ranges straight from pyproject.toml.
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels: ["dependencies"]
+    groups:
+      dev-tooling:
+        patterns: ["pytest*", "ruff"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    commit-message:
+      prefix: "ci"
+    labels: ["dependencies", "github-actions"]
+    groups:
+      actions:
+        patterns: ["*"]

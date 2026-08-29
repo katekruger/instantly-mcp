@@ -1,0 +1,29 @@
+name: Feature request
+description: A new tool, an endpoint not yet covered, or a change to the autonomy policy.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: The workflow this would unblock, not just the feature itself.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed tool or change
+      description: >
+        If this is a new tool, what tier should it be (READ / LOW_WRITE /
+        HIGH_WRITE) and why? If it's irreversible or high blast radius, should
+        it go in HARD_BLOCK? See CONTRIBUTING.md for what a new write tool
+        needs to wire up.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Instantly v2 API endpoint(s) involved, if known
+      description: Link to https://developer.instantly.ai/ if you have it handy.

@@ -30,6 +30,7 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
     "ruff>=0.6.0",
 ]
 
@@ -62,3 +63,19 @@ target-version = "py311"
 # off deliberately: `Optional[X]` reads fine and churning 900 lines of working
 # tool definitions to satisfy a preference is not worth the diff.
 select = ["E", "F", "W", "I", "B"]
+
+[tool.coverage.run]
+source = ["src/instantly_mcp"]
+branch = true
+
+[tool.coverage.report]
+# No fail-under gate yet: the baseline needs to be measured before a threshold
+# means anything. Once CI has run a few times, set one here (start at the
+# measured floor, not at 100 -- policy.py's untestable branches, e.g. the
+# audit-log OSError swallow paths that require monkeypatching open(), keep
+# it under 100 honestly).
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]

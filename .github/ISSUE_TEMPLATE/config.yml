@@ -1,0 +1,11 @@
+# Discussions is not enabled on this repo, so "blank" issues stay open for
+# questions and ideas that don't fit the bug/feature forms below, rather than
+# linking to a tab that doesn't exist.
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/katekruger/instantly-mcp/security/advisories/new
+    about: >
+      Do not open a public issue. A safety gate that let a write through it
+      should have blocked — the confirm gate, an autonomy cap, or the
+      hard-block list — counts as a security issue; report it here.

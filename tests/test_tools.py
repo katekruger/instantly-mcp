@@ -115,12 +115,44 @@ async def test_assisted_high_write_still_previews(monkeypatch, tmp_path):
     assert log.calls == []
 
 
-async def test_autonomous_hard_block_still_previews(monkeypatch, tmp_path):
+@pytest.mark.parametrize("coro_factory", [
+    lambda: server.delete_lead("lead-1"),
+    lambda: server.delete_webhook("wh-1"),
+    lambda: server.pause_account("mailbox@example.com"),
+    lambda: server.remove_from_blocklist(["bad@example.com"]),
+])
+async def test_autonomous_hard_block_still_previews(monkeypatch, tmp_path, coro_factory):
+    """Every hard-blocked tool, not just delete_lead: the README's claim is
+    "the hard-block list", plural, and a policy change that only re-blocked
+    one of the four should still fail this."""
     log = install_client(monkeypatch, boom_handler)
     install_policy(monkeypatch, tmp_path, level="autonomous")
-    # delete_lead is hard-blocked: never runs without confirm, even autonomous.
-    result = await server.delete_lead("lead-1")
+    result = await coro_factory()
     assert "hard-blocked" in preview_text(result).lower()
+    assert log.calls == []
+
+
+async def test_hard_blocked_tool_still_executes_with_explicit_confirm(monkeypatch, tmp_path):
+    """Hard-blocked means "never runs autonomously," not "never runs at all" —
+    the operator's explicit confirm=true must still work, even under
+    AUTONOMY_LEVEL=autonomous, or the tool becomes permanently unusable."""
+    log = install_client(monkeypatch, ok_handler)
+    install_policy(monkeypatch, tmp_path, level="autonomous")
+    result = await server.pause_account("mailbox@example.com", confirm=True)
+    assert log.calls == [("POST", "/api/v2/accounts/mailbox@example.com/pause")]
+    assert isinstance(result, dict)
+
+
+async def test_move_lead_between_two_campaigns_exceeds_default_campaign_cap(monkeypatch, tmp_path):
+    """move_lead targets both the source and destination campaign, so with
+    the default max_campaigns_per_call=1 it cannot run autonomously between
+    two different campaigns even though it is a single tool call — easy to
+    miss, so it needs its own test rather than relying on the generic
+    single-campaign HIGH_WRITE case above."""
+    log = install_client(monkeypatch, boom_handler)
+    install_policy(monkeypatch, tmp_path, level="autonomous")
+    result = await server.move_lead("lead-1", to_campaign_id="camp-b", from_campaign_id="camp-a")
+    assert "campaign" in preview_text(result).lower()
     assert log.calls == []
 
 

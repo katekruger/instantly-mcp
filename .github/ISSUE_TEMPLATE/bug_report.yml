@@ -1,0 +1,91 @@
+name: Bug report
+description: A tool misbehaved, or a safety gate didn't do what the docs say it does.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. If a write executed **without** `confirm=true`
+        and without the autonomy policy explicitly permitting it, or a
+        hard-blocked tool (`delete_lead`, `delete_webhook`, `pause_account`,
+        `remove_from_blocklist`) ran autonomously, please report that
+        [privately as a security
+        issue](https://github.com/katekruger/instantly-mcp/security/advisories/new)
+        instead — that is the exact failure mode this project exists to
+        prevent.
+
+  - type: input
+    id: tool
+    attributes:
+      label: Tool name
+      description: The MCP tool involved, e.g. `add_leads`, `pause_campaign`.
+      placeholder: add_leads
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened
+      description: What the tool did or returned.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: >
+        The tool call and arguments that trigger it. **Replace real API keys,
+        campaign IDs, and lead emails with placeholders before pasting** —
+        `example.com` addresses and `camp-xxxx` style IDs are fine.
+      render: json
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Package version (`pip show instantly-mcp`) or commit SHA.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Transport
+      options:
+        - stdio (local)
+        - streamable-http (hosted)
+        - sse (hosted)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: autonomy_level
+    attributes:
+      label: AUTONOMY_LEVEL
+      options:
+        - manual (default)
+        - assisted
+        - autonomous
+        - not sure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have removed any real API keys, tokens, and lead contact data from this report.
+          required: true
+        - label: I checked docs/autonomy.md to confirm the behavior I'm reporting isn't documented as intended.

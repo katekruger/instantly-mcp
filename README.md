@@ -174,6 +174,8 @@ blueprint are included. See [Hosting](docs/hosting.md).
 | [Implementation notes](docs/api-notes.md) | Where the live Instantly v2 API differs from the obvious reading |
 | [Security policy](SECURITY.md) | Reporting a vulnerability; what this server does and doesn't protect |
 | [Contributing](CONTRIBUTING.md) | Running the tests and linter, and what a good change looks like |
+| [Changelog](CHANGELOG.md) | What changed in each release |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards and how to report a violation |
 
 ## Repository layout
 

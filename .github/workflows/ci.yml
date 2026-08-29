@@ -27,7 +27,15 @@ jobs:
 
       # No secrets: the suite is fully mocked and must never reach the live API.
       - name: Test
-        run: pytest -q
+        run: pytest -q --cov=src/instantly_mcp --cov-report=term-missing
+
+      # policy.py is the safety module every write-gating claim in the README
+      # rests on. Gate it at a real floor so a regression there fails CI
+      # specifically, even before the whole-project number earns a threshold
+      # (see the comment in pyproject.toml's [tool.coverage.report]).
+      - name: Coverage floor for the safety module (policy.py)
+        run: |
+          coverage report --include='*/instantly_mcp/policy.py' --fail-under=95
 
   lint:
     name: ruff
