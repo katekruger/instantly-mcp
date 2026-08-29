@@ -6,8 +6,8 @@ templates, no ceremony.
 ## Getting set up
 
 ```bash
-git clone https://github.com/katekruger/instantlymcp.git
-cd instantlymcp
+git clone https://github.com/katekruger/instantly-mcp.git
+cd instantly-mcp
 uv sync                          # or: python3.12 -m venv .venv && pip install -e ".[dev]"
 ```
 

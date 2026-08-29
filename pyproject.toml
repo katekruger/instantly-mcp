@@ -34,10 +34,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/katekruger/instantlymcp"
-Repository = "https://github.com/katekruger/instantlymcp"
-Documentation = "https://github.com/katekruger/instantlymcp#documentation"
-Issues = "https://github.com/katekruger/instantlymcp/issues"
+Homepage = "https://github.com/katekruger/instantly-mcp"
+Repository = "https://github.com/katekruger/instantly-mcp"
+Documentation = "https://github.com/katekruger/instantly-mcp#documentation"
+Issues = "https://github.com/katekruger/instantly-mcp/issues"
 
 [project.scripts]
 instantly-mcp = "instantly_mcp.server:main"

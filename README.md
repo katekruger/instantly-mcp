@@ -1,6 +1,6 @@
 # Instantly MCP server
 
-[![CI](https://github.com/katekruger/instantlymcp/actions/workflows/ci.yml/badge.svg)](https://github.com/katekruger/instantlymcp/actions/workflows/ci.yml)
+[![CI](https://github.com/katekruger/instantly-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/katekruger/instantly-mcp/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-server-6f42c1.svg)](https://modelcontextprotocol.io)
@@ -42,8 +42,8 @@ Requires **Python 3.11+** and an Instantly account with v2 API access.
 **1. Install**
 
 ```bash
-git clone https://github.com/katekruger/instantlymcp.git
-cd instantlymcp
+git clone https://github.com/katekruger/instantly-mcp.git
+cd instantly-mcp
 
 # Option A — uv (preferred)
 uv sync
@@ -86,7 +86,7 @@ Add this to your client config, adjusting the absolute path:
   "mcpServers": {
     "instantly": {
       "command": "uv",
-      "args": ["--directory", "/absolute/path/to/instantlymcp", "run", "instantly-mcp"],
+      "args": ["--directory", "/absolute/path/to/instantly-mcp", "run", "instantly-mcp"],
       "env": { "INSTANTLY_API_KEY": "your_key_here" }
     }
   }
@@ -100,7 +100,7 @@ entry point and drop `args`:
 {
   "mcpServers": {
     "instantly": {
-      "command": "/absolute/path/to/instantlymcp/.venv/bin/instantly-mcp",
+      "command": "/absolute/path/to/instantly-mcp/.venv/bin/instantly-mcp",
       "env": { "INSTANTLY_API_KEY": "your_key_here" }
     }
   }
@@ -110,7 +110,7 @@ entry point and drop `args`:
 **Where that config lives (macOS):**
 
 - **Claude Desktop:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Claude Code:** `claude mcp add instantly -e INSTANTLY_API_KEY=your_key_here -- uv --directory /absolute/path/to/instantlymcp run instantly-mcp`
+- **Claude Code:** `claude mcp add instantly -e INSTANTLY_API_KEY=your_key_here -- uv --directory /absolute/path/to/instantly-mcp run instantly-mcp`
 
 **5. Try it**
 

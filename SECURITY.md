@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Report security issues privately through
-[GitHub's private advisory form](https://github.com/katekruger/instantlymcp/security/advisories/new)
+[GitHub's private advisory form](https://github.com/katekruger/instantly-mcp/security/advisories/new)
 rather than opening a public issue. Please include what you did, what happened,
 and what you expected. This is a personal project, so response times are
 best-effort.
