@@ -204,6 +204,12 @@ ruff check src tests      # lint
 
 CI runs both on every push and pull request against Python 3.11, 3.12 and 3.13.
 
+## See also
+
+[segment-mcp](https://github.com/katekruger/segment-mcp) — a read-first MCP
+server for Twilio Segment, built on the same read-only-by-default,
+risk-tiered safety model this project's `policy.py` pioneered.
+
 ## License
 
 [MIT](LICENSE).
