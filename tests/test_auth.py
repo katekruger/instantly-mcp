@@ -100,6 +100,7 @@ def test_explicit_public_url_beats_render_fallback(monkeypatch):
     http_env(monkeypatch, PUBLIC_URL="https://custom.example.com")
     monkeypatch.setenv("RENDER_EXTERNAL_URL", "https://ignored.onrender.com")
     auth = build_server().settings.auth
+    assert auth is not None
     assert str(auth.resource_server_url).rstrip("/") == "https://custom.example.com"
 
 

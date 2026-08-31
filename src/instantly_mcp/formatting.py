@@ -158,13 +158,20 @@ def summarize_leads(items: list[dict], has_more: bool) -> dict:
     return out
 
 
-def summarize_account(a: dict) -> dict:
+def summarize_account(a: dict[str, Any]) -> dict:
+    status = a.get("status")
+    warmup_status = a.get("warmup_status")
     return {
         "email": a.get("email"),
-        "status": ACCOUNT_STATUS.get(a.get("status"), a.get("status")),
-        "status_code": a.get("status"),
-        "warmup_status": WARMUP_STATUS.get(
-            (a.get("warmup_status")), a.get("warmup_status")),
+        # ACCOUNT_STATUS/WARMUP_STATUS are keyed by int; a status the API
+        # sends as something else (or omits) passes through unmapped rather
+        # than being coerced or dropped.
+        "status": ACCOUNT_STATUS.get(status, status) if isinstance(status, int) else status,
+        "status_code": status,
+        "warmup_status": (
+            WARMUP_STATUS.get(warmup_status, warmup_status)
+            if isinstance(warmup_status, int) else warmup_status
+        ),
         "daily_limit": a.get("daily_limit"),
         "provider_code": a.get("provider_code"),
     }

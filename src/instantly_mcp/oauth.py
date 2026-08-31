@@ -169,6 +169,10 @@ class SingleUserOAuthProvider(
                     error="invalid_redirect_uri",
                     error_description=f"redirect_uri host not allowed: {uri}",
                 )
+        # client_id is populated by the registration handler before this is
+        # called, per the SDK's own registration flow -- not optional in
+        # practice, only in the field's general type.
+        assert client_info.client_id is not None
         # Mutating here propagates to the registration response the client
         # stores, which is what makes the secret reproducible later.
         client_info.client_secret = self._derive_secret(client_info.client_id)
@@ -186,6 +190,13 @@ class SingleUserOAuthProvider(
         out in :meth:`complete_login`.
         """
         request_id = secrets.token_urlsafe(24)
+        # The SDK's own client model allows client_id to be None in general,
+        # but this method is only ever called with a client this provider
+        # itself issued an id to (via register_client/get_client) -- both
+        # always populate it. A missing id here would mean the SDK called us
+        # out of its documented sequence, which is a bug worth a loud failure
+        # rather than silently parking an unusable request.
+        assert client.client_id is not None
         self._pending[request_id] = (
             client.client_id,
             params,
@@ -258,6 +269,7 @@ class SingleUserOAuthProvider(
     ) -> OAuthToken:
         # Single-use: burn the code on exchange so a replayed redirect is inert.
         self._codes.pop(authorization_code.code, None)
+        assert client.client_id is not None  # see authorize()'s comment
         return self._issue(
             client_id=client.client_id,
             scopes=authorization_code.scopes,
@@ -283,6 +295,7 @@ class SingleUserOAuthProvider(
         scopes: list[str],
     ) -> OAuthToken:
         self._refresh.pop(refresh_token.token, None)  # rotate on use
+        assert client.client_id is not None  # see authorize()'s comment
         return self._issue(
             client_id=client.client_id,
             scopes=scopes or refresh_token.scopes,

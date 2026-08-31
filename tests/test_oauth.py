@@ -8,6 +8,7 @@ anonymous caller the ability to send mail from the operator's domain.
 from __future__ import annotations
 
 import time
+from typing import Any
 
 import pytest
 from mcp.server.auth.provider import AuthorizationParams
@@ -40,8 +41,8 @@ def client():
     )
 
 
-def params(**kw):
-    base = dict(
+def params(**kw: Any) -> AuthorizationParams:
+    base: dict[str, Any] = dict(
         state="state-abc",
         scopes=["instantly"],
         code_challenge="challenge-xyz",
@@ -243,6 +244,7 @@ async def test_registration_secret_is_not_the_passphrase(provider):
         redirect_uris=[AnyUrl(REDIRECT)], scope="instantly",
     )
     await provider.register_client(info)
+    assert info.client_secret is not None
     assert PASSPHRASE not in info.client_secret
 
 

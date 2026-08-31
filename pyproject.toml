@@ -1,6 +1,6 @@
 [project]
 name = "instantly-mcp"
-version = "0.1.0"
+dynamic = ["version"]
 description = "MCP server wrapping the Instantly.ai v2 API (analytics, leads, campaigns, unibox, accounts) with per-action safety gates and an autonomy policy."
 keywords = ["mcp", "model-context-protocol", "instantly", "cold-email", "claude", "llm-tools"]
 classifiers = [
@@ -32,6 +32,7 @@ dev = [
     "pytest-asyncio>=0.23.0",
     "pytest-cov>=5.0.0",
     "ruff>=0.6.0",
+    "pyright>=1.1.380",
 ]
 
 [project.urls]
@@ -46,6 +47,13 @@ instantly-mcp = "instantly_mcp.server:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+# Single source of truth for the version: __version__ in __init__.py. Before
+# this, pyproject.toml's `version` and __init__.py's `__version__` were two
+# separate literals that could silently drift -- release.yml's tag-matches-
+# version check needs exactly one place to read from.
+path = "src/instantly_mcp/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/instantly_mcp"]
@@ -79,3 +87,18 @@ exclude_lines = [
     "pragma: no cover",
     "if __name__ == .__main__.:",
 ]
+
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.11"
+# "basic" (pyright's own default -- pinned explicitly rather than left to
+# whatever the tool's default becomes later) rather than "strict": strict
+# would additionally demand annotations pyright can't infer through the mcp
+# SDK's own partially-typed surface and the deliberate plain `dict` / Any
+# tool signatures noted in models.py's docstring (FastMCP generates simpler
+# JSON schemas from them). "basic" already catches real bugs -- it's what
+# found every fix in this project's first type-check pass -- without
+# demanding an unrelated rewrite to reach "strict".
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false

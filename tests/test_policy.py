@@ -83,6 +83,7 @@ def test_every_hard_blocked_tool_resists_autonomous_mode(tmp_path, tool):
     p = Policy(cfg(tmp_path, level="autonomous"))
     decision = p.evaluate(tool, HIGH_WRITE, confirm=False, preview_text="Would ACT.")
     assert decision.execute is False
+    assert decision.preview is not None
     assert "hard-blocked" in decision.preview.lower()
 
 
@@ -119,6 +120,7 @@ def test_unrecognized_tier_under_assisted_fails_closed_to_a_confirm_prompt(tmp_p
     decision = p.evaluate("some_future_tool", "MEDIUM_WRITE", confirm=False,
                            preview_text="Would DO something.")
     assert decision.execute is False
+    assert decision.preview is not None
     assert "needs confirm=true" in decision.preview.lower()
 
 
@@ -148,6 +150,7 @@ def test_leads_per_day_cap_blocks_once_prior_usage_plus_new_volume_exceeds_it(tm
     decision = p.evaluate("add_leads", LOW_WRITE, confirm=False, preview_text="Would ADD 300.",
                            volume=300, metric="leads_added")
     assert decision.execute is False
+    assert decision.preview is not None
     assert "5000 leads/24h" in decision.preview
 
 
@@ -228,6 +231,7 @@ def test_emails_per_day_cap_blocks_high_write_even_under_autonomous(tmp_path):
     decision = p.evaluate("reply_to_email", HIGH_WRITE, confirm=False,
                            preview_text="Would REPLY.", volume=1, metric="emails_sent")
     assert decision.execute is False
+    assert decision.preview is not None
     assert "50 emails/24h" in decision.preview
 
 
@@ -249,6 +253,7 @@ def test_per_call_lead_cap_is_checked_independently_of_the_daily_cap(tmp_path):
     decision = p.evaluate("add_leads", LOW_WRITE, confirm=False, preview_text="Would ADD 500.",
                            volume=500, metric="leads_added")
     assert decision.execute is False
+    assert decision.preview is not None
     assert "cap 100 per call" in decision.preview
 
 
@@ -262,6 +267,7 @@ def test_campaigns_per_call_cap_blocks_a_two_campaign_action_under_default_cap(t
     decision = p.evaluate("move_lead", HIGH_WRITE, confirm=False, preview_text="Would MOVE.",
                            target_campaigns=["camp-a", "camp-b"])
     assert decision.execute is False
+    assert decision.preview is not None
     assert "2 campaigns" in decision.preview
 
 
@@ -280,6 +286,7 @@ def test_denylist_blocks_a_named_campaign_even_under_autonomous(tmp_path):
     decision = p.evaluate("pause_campaign", HIGH_WRITE, confirm=False, preview_text="Would PAUSE.",
                            target_campaigns=["do-not-touch"])
     assert decision.execute is False
+    assert decision.preview is not None
     assert "denylist" in decision.preview
 
 

@@ -1,7 +1,8 @@
 # Contributing
 
 Issues and pull requests are welcome. This is a small project — no CLA, no
-templates, no ceremony.
+templates, no ceremony. See also [AGENTS.md](AGENTS.md) — the conventions
+below are the short version of what's there.
 
 ## Getting set up
 
@@ -14,15 +15,20 @@ uv sync                          # or: python3.12 -m venv .venv && pip install -
 ## Before you open a PR
 
 ```bash
-pytest -q                                                    # all mocked; no network, no API key required
-pytest -q --cov=src/instantly_mcp --cov-report=term-missing  # same, with coverage
-ruff check src tests                                         # lint (line length 100, rules in pyproject.toml)
+ruff check src tests                                          # lint (line length 100, rules in pyproject.toml)
+pyright                                                        # types (basic mode; see pyproject.toml's [tool.pyright])
+pytest -q --cov=src/instantly_mcp --cov-report=term-missing    # tests + coverage; all mocked, no network, no API key
 ```
+
+`ruff format --check` is deliberately not run — this codebase predates a
+formatter pass and adopting one is its own change, not a drive-by.
 
 CI runs all three against Python 3.11, 3.12 and 3.13, and separately fails the
 build if `policy.py` — the safety module — drops below 95% coverage. That
 floor is scoped to `policy.py` alone; the rest of the project doesn't have one
-yet (see the comment in `pyproject.toml`'s `[tool.coverage.report]`).
+yet (see the comment in `pyproject.toml`'s `[tool.coverage.report]`). A
+`zizmor` workflow also scans the GitHub Actions workflows themselves for
+security issues on every push and PR.
 
 ## What a good change looks like
 

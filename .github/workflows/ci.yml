@@ -4,26 +4,42 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_call:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  test:
-    name: pytest (py${{ matrix.python-version }})
+  check:
+    name: lint, types, tests (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
       - name: Install
         run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+
+      - name: Ruff check
+        run: ruff check src tests
+
+      # ruff format --check is deliberately not run: this codebase predates
+      # a formatter pass and has never been through one. Adopting it means
+      # reformatting every file in one pass, which is its own reviewed
+      # change, not a side effect of adding CI.
+      - name: Pyright
+        run: pyright
 
       # No secrets: the suite is fully mocked and must never reach the live API.
       - name: Test
@@ -34,16 +50,4 @@ jobs:
       # specifically, even before the whole-project number earns a threshold
       # (see the comment in pyproject.toml's [tool.coverage.report]).
       - name: Coverage floor for the safety module (policy.py)
-        run: |
-          coverage report --include='*/instantly_mcp/policy.py' --fail-under=95
-
-  lint:
-    name: ruff
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install ruff
-      - run: ruff check src tests
+        run: coverage report --include='*/instantly_mcp/policy.py' --fail-under=95

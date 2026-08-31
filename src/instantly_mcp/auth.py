@@ -21,6 +21,7 @@ import sys
 from mcp.server.auth.provider import AccessToken, TokenVerifier
 from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions
 from mcp.server.fastmcp import FastMCP
+from pydantic import AnyHttpUrl
 
 from .oauth import SingleUserOAuthProvider
 
@@ -130,8 +131,8 @@ def build_server() -> FastMCP:
         port=int(os.environ.get("PORT", "8000")),
         auth_server_provider=provider,
         auth=AuthSettings(
-            issuer_url=public_url,
-            resource_server_url=public_url,
+            issuer_url=AnyHttpUrl(public_url),
+            resource_server_url=AnyHttpUrl(public_url),
             required_scopes=[SCOPE],
             client_registration_options=ClientRegistrationOptions(
                 enabled=True, valid_scopes=[SCOPE], default_scopes=[SCOPE]

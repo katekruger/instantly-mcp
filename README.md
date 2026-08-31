@@ -174,6 +174,7 @@ blueprint are included. See [Hosting](docs/hosting.md).
 | [Implementation notes](docs/api-notes.md) | Where the live Instantly v2 API differs from the obvious reading |
 | [Security policy](SECURITY.md) | Reporting a vulnerability; what this server does and doesn't protect |
 | [Contributing](CONTRIBUTING.md) | Running the tests and linter, and what a good change looks like |
+| [AGENTS.md](AGENTS.md) | Conventions for AI coding agents working in this repo — commands, layout, and the autonomy-tier model as a non-negotiable |
 | [Changelog](CHANGELOG.md) | What changed in each release |
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards and how to report a violation |
 

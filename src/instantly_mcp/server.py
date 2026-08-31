@@ -13,10 +13,12 @@ the README for the tool-to-tier table.
 
 from __future__ import annotations
 
+import argparse
 import os
 import sys
 from typing import Any, Optional
 
+from . import __version__
 from . import formatting as fmt
 from .auth import build_server
 from .client import InstantlyClient
@@ -910,10 +912,31 @@ async def delete_webhook(webhook_id: str, confirm: bool = False) -> Any:
 # ===========================================================================
 # Entry point
 # ===========================================================================
+def _build_arg_parser() -> argparse.ArgumentParser:
+    """``--help``/``--version`` must work with zero configuration: no
+    ``INSTANTLY_API_KEY``, no network call. ``main()`` used to ignore
+    ``sys.argv`` entirely and run the fatal config check unconditionally, so
+    ``instantly-mcp --help`` died with "INSTANTLY_API_KEY is not set" instead
+    of printing usage -- the first thing anyone types after installing.
+    Parsing args (and letting argparse's own ``--help``/``--version`` actions
+    exit 0 on their own) happens before the config check is ever reached."""
+    parser = argparse.ArgumentParser(
+        prog="instantly-mcp",
+        description=(
+            "MCP server wrapping the Instantly.ai v2 API. Configuration is via "
+            "environment variables -- see .env.example."
+        ),
+    )
+    parser.add_argument("--version", action="version", version=f"instantly-mcp {__version__}")
+    return parser
+
+
 def main() -> None:
     """Console entry point. Fails fast if INSTANTLY_API_KEY is unset. Selects the
     transport from $TRANSPORT (default stdio) so switching to hosted HTTP/SSE is a
     config change, not a rewrite."""
+    _build_arg_parser().parse_args()
+
     if not os.environ.get("INSTANTLY_API_KEY"):
         print(
             "ERROR: INSTANTLY_API_KEY is not set.\n"
@@ -926,9 +949,15 @@ def main() -> None:
     transport = os.environ.get("TRANSPORT", "stdio").strip().lower()
     if transport == "stdio":
         mcp.run()
-    else:
+    elif transport in ("sse", "streamable-http"):
         # FastMCP reads HOST/PORT from its own settings/env for HTTP transports.
         mcp.run(transport=transport)
+    else:
+        print(
+            f"ERROR: TRANSPORT={transport!r} is not one of stdio, sse, streamable-http.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
