@@ -29,13 +29,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SARIF file
-        # continue-on-error until code scanning is confirmed enabled for this
-        # repo (Settings -> Code security -> Code scanning). Public repos get
-        # it for free, but it is not on by default the moment a repo goes
-        # public -- remove this once a real run has uploaded successfully
-        # (see the same note in segment-mcp's zizmor.yml, which went through
-        # this exact transition).
-        continue-on-error: true
+        # Code scanning confirmed enabled: run 33411592691 (2026-08-31)
+        # uploaded successfully on the first real push, so this no longer
+        # needs the continue-on-error segment-mcp's zizmor.yml carried
+        # through its own private-to-public transition.
         uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         with:
           sarif_file: results.sarif
