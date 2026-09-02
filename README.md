@@ -205,7 +205,14 @@ ruff check src tests      # lint
 
 CI runs both on every push and pull request against Python 3.11, 3.12 and 3.13.
 
+
 ## See also
+
+Every project here shares one idea: a GTM system should refuse to act on data it cannot verify.
+
+[campaign-preflight](https://github.com/katekruger/campaign-preflight) — read-only preflight for the campaigns this server sends. Catches suppression, personalization and schedule problems before a launch.
+
+[deliverability-guard](https://github.com/katekruger/deliverability-guard) — watches sender reputation while campaigns run and throttles before a domain burns.
 
 [segment-mcp](https://github.com/katekruger/segment-mcp) — a read-first MCP
 server for Twilio Segment, built on the same read-only-by-default,
